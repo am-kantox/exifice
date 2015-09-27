@@ -25,7 +25,7 @@ module Exifice
 
     class ::Array
       def to_geo
-        Point.new self
+        Point.new *self
       end
     end
 

@@ -36,7 +36,7 @@ describe Exifice::Objects::Point do
 
     # 60.4488884 22.2683333
     expect('60.4488884 22.2683333'.to_geo.lon.deg).to eq 22
-    expect('60.4488884, 22.2683333'.to_geo.lon.min).to eq 16
+    expect([60.4488884, 22.2683333].to_geo.lon.min).to eq 16
     expect('60.4488884,22.2683333'.to_geo.lon.sec).to eq 6
 
     expect('60.4488884 22.2683333'.to_geo.to_s).to eq '60°26′56″N,22°16′6″E'
