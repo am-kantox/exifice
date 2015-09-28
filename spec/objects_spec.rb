@@ -41,4 +41,8 @@ describe Exifice::Objects::Point do
 
     expect('60.4488884 22.2683333'.to_geo.to_s).to eq '60°26′56″N,22°16′6″E'
   end
+
+  it 'does basic distance math' do
+    expect(Exifice.distance('60°26′56″N,22°16′6″E', [10.0, 20.0]).round).to eq 5616
+  end
 end

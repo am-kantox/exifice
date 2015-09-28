@@ -1,10 +1,11 @@
 module Exifice
   module Objects
     class LatLon
-      attr_reader :deg, :min, :sec, :semisphere
+      attr_reader :semisphere
 
       def initialize ll, semisphere: nil
         case ll
+        when LatLon then @semisphere, @deg, @min, @sec = ll.semisphere, ll.deg, ll.min, ll.sec
         when Array
           @semisphere, @deg, @min, @sec = [extract_semisphere(ll.first), *ll[-3..-1].map(&:to_i).map(&:abs)]
         when Numeric then from_numeric ll
@@ -24,7 +25,7 @@ module Exifice
         when Array then nil
         when ->(ss) { ['N', 'E'].include? ss} then true
         when ->(ss) { ['S', 'W'].include? ss} then false
-        else raise 'Internal error: Unknown semisphere.'
+        else raise "Internal error: Unknown semisphere [«#{@semisphere}» :: #{@semisphere.class}]."
         end
       end
 
@@ -36,10 +37,23 @@ module Exifice
       end
 
       def to_f
-        (@deg + @min / 60.0 + @sec / 3600.0) * (ne? ? +1.0 : -1.0)
+        (deg + min / 60.0 + sec / 3600.0) * (ne? ? +1.0 : -1.0)
+      end
+
+      %i(deg min sec).each do |m|
+        define_method m do
+          instance_variable_get("@#{m}") || 0.0
+        end
       end
 
     private
+
+      def subtrahend other
+        Point.new(other).tap do |subtrahend|
+          raise ArgumentError.new("Can not instantiate Point from #{other}") if subtrahend.nil?
+        end
+      end
+
       def extract_semisphere s
         case s.to_s
         when /\A[NnSsEeWw]/ then s.to_s[0].upcase
