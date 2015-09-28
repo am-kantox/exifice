@@ -30,21 +30,43 @@ end
 describe Exifice::Objects::Point do
   it 'parses strings' do
     # 60°26′56″N 22°16′6″E
-    expect('60°26′56″N 22°16′6″E'.to_geo.lat.deg).to eq 60
-    expect('60°26′56″N, 22°16′6″E'.to_geo.lat.min).to eq 26
-    expect('60°26′56″N,22°16′6″E'.to_geo.lat.sec).to eq 56
+    expect('60°26′56″N 22°16′6″E'.to_latlon.lat.deg).to eq 60
+    expect('60°26′56″N, 22°16′6″E'.to_latlon.lat.min).to eq 26
+    expect('60°26′56″N,22°16′6″E'.to_latlon.lat.sec).to eq 56
 
     # 60.4488884 22.2683333
-    expect('60.4488884 22.2683333'.to_geo.lon.deg).to eq 22
-    expect([60.4488884, 22.2683333].to_geo.lon.min).to eq 16
-    expect('60.4488884,22.2683333'.to_geo.lon.sec).to eq 6
+    expect('60.4488884 22.2683333'.to_latlon.lon.deg).to eq 22
+    expect([60.4488884, 22.2683333].to_latlon.lon.min).to eq 16
+    expect('60.4488884,22.2683333'.to_latlon.lon.sec).to eq 6
 
-    expect('60.4488884 22.2683333'.to_geo.to_s).to eq '60°26′56″N,22°16′6″E'
-    expect('60.4488884 22.2683333'.to_geo.round.to_a(:float)).to eq [60.44499999999999, 22.265]
+    expect('60.4488884 22.2683333'.to_latlon.to_s).to eq '60°26′56″N,22°16′6″E'
+    expect('60.4488884 22.2683333'.to_latlon.round.to_a(:float)).to eq [60.44499999999999, 22.265]
+
+    expect('60.4488884 22.2683333'.to_latlon.to_a(:float)).to eq [60.44888888888889, 22.26833333333333]
+    expect('60.4488884 22.2683333'.to_latlon.to_h).to eq(lat: 60.44888888888889, lon: 22.26833333333333)
   end
 
   it 'does basic distance math' do
     expect(Exifice.distance('60°26′56″N,22°16′6″E', [10.0, 20.0]).round).to eq 5616
+  end
+end
+
+describe Exifice::Objects::Point3D do
+  it 'parses strings' do
+    expect('60°26′56″N,22°16′6″E,22'.to_point3d.lat.sec).to eq 56
+    expect('60°26′56″N,22°16′6″E,22'.to_point3d.alt).to eq 22.0
+  end
+end
+
+describe Exifice::Objects::Point3D do
+  it 'parses strings' do
+    expect('60°26′56″N,22°16′6″E,22,2015-Sep-30'.to_point4d.time).to eq Date.parse('2015-Sep-30')
+    expect('60°26′56″N,22°16′6″E,22'.to_point4d.alt).to eq 22.0
+
+    expect([Date.today, '60°26′56″N', '22°16′6″E', 22].to_point4d.time).to eq Date.today
+    expect(['60°26′56″N', '22°16′6″E', 22, Date.today].to_point4d.time).to eq Date.today
+    expect([Date.today, '60°26′56″N', '22°16′6″E', 22].to_point4d.alt).to eq 22.0
+    expect(['60°26′56″N', '22°16′6″E', 22, Date.today].to_point4d.alt).to eq 22.0
   end
 end
 

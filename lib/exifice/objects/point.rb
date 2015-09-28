@@ -38,6 +38,11 @@ module Exifice
         end
       end
 
+      # @return [Hash] containing floats
+      def to_h
+        %i(lat lon).zip(to_a(:float)).to_h
+      end
+
       # Calculates the nearest [lat,lon] location, basing in the value of
       #   parameter. E. g. for [53.121231231, -18.4353465] will return [53.12, -18.44].
       #   It might be useful if we need to round multitudes to present them.
@@ -93,13 +98,13 @@ module Exifice
     end
 
     class ::String
-      def to_geo
+      def to_latlon
         Point.new self
       end
     end
 
     class ::Array
-      def to_geo
+      def to_latlon
         Point.new *self
       end
     end
