@@ -75,4 +75,8 @@ describe Exifice::Objects::Track do
     expect(Exifice::Objects::Track.load('test_data/gpx.xml').points).not_to be_empty
     expect(Exifice::Objects::Track.load('test_data/gpx.xml').points.count).to eql 407
   end
+  it 'loads and understands kml' do
+    expect(Exifice::Objects::Track.load('test_data/kml.xml').points).not_to be_empty
+    expect(Exifice::Objects::Track.load('test_data/kml.xml').points.count).to eql 39
+  end
 end
