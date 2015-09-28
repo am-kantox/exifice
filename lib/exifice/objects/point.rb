@@ -38,13 +38,13 @@ module Exifice
         end
       end
 
-      # Calculates the nearest [lat,long] location, basing in the value of
-      #   parameter. E. g. for [53.121231231, -18.4353465] will return [53.0, -18.5].
+      # Calculates the nearest [lat,lon] location, basing in the value of
+      #   parameter. E. g. for [53.121231231, -18.4353465] will return [53.12, -18.44].
       #   It might be useful if we need to round multitudes to present them.
       # @param slice [Number] the “modulo” to calculate nearest “rounded” value
       # @return [Point] the rounded value
-      def round slice = 0.5
-        Point.new @lat - @lat.modulo(slice), @lon - @lon.modulo(slice)
+      def round slice = 0.005
+        Point.new [@lat, @lon].map(&:to_f).map { |ll| (ll - ll.modulo(slice)).round(Math.log(1 / slice, 10).floor + 1) }
       end
 
       # Checks if the multitudes behind represent the correct place on the Earth.

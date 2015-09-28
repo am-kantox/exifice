@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'geocoder', '~> 1.2'
   spec.add_dependency 'mini_exiftool', '~> 2.5'
   spec.add_dependency 'mini_magick', '~> 4.3'
+  spec.add_dependency 'nokogiri', '~> 1.6'
+
 end

@@ -40,9 +40,17 @@ describe Exifice::Objects::Point do
     expect('60.4488884,22.2683333'.to_geo.lon.sec).to eq 6
 
     expect('60.4488884 22.2683333'.to_geo.to_s).to eq '60°26′56″N,22°16′6″E'
+    expect('60.4488884 22.2683333'.to_geo.round.to_a(:float)).to eq [60.44499999999999, 22.265]
   end
 
   it 'does basic distance math' do
     expect(Exifice.distance('60°26′56″N,22°16′6″E', [10.0, 20.0]).round).to eq 5616
+  end
+end
+
+describe Exifice::Objects::Track do
+  it 'loads and understands gpx' do
+    expect(Exifice::Objects::Track.load('test_data/gpx.xml').points).not_to be_empty
+    expect(Exifice::Objects::Track.load('test_data/gpx.xml').points.count).to eql 407
   end
 end
