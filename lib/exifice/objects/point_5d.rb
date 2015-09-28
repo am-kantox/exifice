@@ -4,7 +4,7 @@ module Exifice
       attr_reader :photo
 
       def initialize photo, *args
-        @photo = photo
+        @photo = Photo.new photo
         super args
       end
 
